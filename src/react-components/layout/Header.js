@@ -1,0 +1,103 @@
+import React from "react";
+import PropTypes from "prop-types";
+import { FormattedMessage } from "react-intl";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCog } from "@fortawesome/free-solid-svg-icons/faCog";
+import maskEmail from "../../utils/mask-email";
+import styles from "./Header.scss";
+import { Container } from "./Container";
+import { SocialBar } from "../home/SocialBar";
+import { SignInButton } from "../home/SignInButton";
+
+export function Header({
+  appName,
+  appLogo,
+  showCloud,
+  enableSpoke,
+  editorName,
+  showDocsLink,
+  docsUrl,
+  showSourceLink,
+  showCommunityLink,
+  communityUrl,
+  isAdmin,
+  isSignedIn,
+  email,
+  onSignOut,
+  isHmc
+}) {
+  return (
+    <header>
+      <Container as="div" className={styles.container}>
+        <nav>
+          <ul>
+            <li>
+              <a href="/" className={styles.homeLink}>
+                <img alt={appName} src={appLogo} />
+              </a>
+            </li>
+            {isSignedIn && (
+              <li>
+                <a href="/spoke">
+                 <FormattedMessage id="header.spoke" defaultMessage="Spoke" />
+                </a>
+              </li>
+            )}
+            {showDocsLink && <li />}
+            {showSourceLink && <li />}
+            {showCommunityLink && <li />}
+            {showCloud && <li />}
+            {isAdmin && (
+              <li>
+                <a href="/admin" rel="noreferrer noopener">
+                  <i>
+                    <FontAwesomeIcon icon={faCog} />
+                  </i>
+                  &nbsp;
+                  <FormattedMessage id="header.admin" defaultMessage="Admin" />
+                </a>
+              </li>
+            )}
+          </ul>
+        </nav>
+        <div className={styles.signIn}>
+          {isSignedIn ? (
+            <div>
+              <span>
+                <FormattedMessage
+                  id="header.signed-in-as"
+                  defaultMessage="Signed in as {email}"
+                  values={{ email: maskEmail(email) }}
+                />
+              </span>
+              <a href="#" onClick={onSignOut}>
+                <FormattedMessage id="header.sign-out" defaultMessage="Sign Out" />
+              </a>
+            </div>
+          ) : (
+            <SignInButton />
+          )}
+        </div>
+        {isHmc ? <SocialBar mobile /> : null}
+      </Container>
+    </header>
+  );
+}
+
+Header.propTypes = {
+  appName: PropTypes.string,
+  appLogo: PropTypes.string,
+  showCloud: PropTypes.bool,
+  enableSpoke: PropTypes.bool,
+  editorName: PropTypes.string,
+  showDocsLink: PropTypes.bool,
+  docsUrl: PropTypes.string,
+  showSourceLink: PropTypes.bool,
+  showCommunityLink: PropTypes.bool,
+  communityUrl: PropTypes.string,
+  isAdmin: PropTypes.bool,
+  isSignedIn: PropTypes.bool,
+  email: PropTypes.string,
+  onSignOut: PropTypes.func,
+  isHmc: PropTypes.bool
+};
